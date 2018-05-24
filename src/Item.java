@@ -8,7 +8,7 @@ public class Item implements Serializable {
     private int newness;
     private String description;
     private int value;
-    private int ownerId;
+    private int owner;
 
     private Item() {
 
@@ -19,7 +19,7 @@ public class Item implements Serializable {
         this.newness = newness;
         this.description = description;
         this.value = value;
-        ownerId = Account.getCurrentUser().getId();
+        owner = Account.getCurrentUser().getId();
         list.add(this);
     }
 
@@ -68,7 +68,7 @@ public class Item implements Serializable {
     private void checkUser() throws Exception {
         if (Account.getCurrentUser() == null)
             throw new NoLoginException();
-        else if (!(Account.getCurrentUser().getId() == ownerId) && !Account.getCurrentUser().isAdmin()) {
+        else if (!(Account.getCurrentUser().getId() == owner) && !Account.getCurrentUser().isAdmin()) {
             throw new NoPermissionException();
         }
     }
@@ -77,7 +77,7 @@ public class Item implements Serializable {
     public String toString() {
         return "id: " + list.indexOf(this) +
                 "\nname: " + name +
-                "\nowner: " + Account.get(ownerId).getUsername() +
+                "\nowner: " + Account.get(owner).getUsername() +
                 "\nnewness: " + newness +
                 "\ndescription: " + description +
                 "\nvalue: " + value + "\n";
@@ -92,8 +92,8 @@ public class Item implements Serializable {
         return name;
     }
 
-    public int getOwnerId() {
-        return ownerId;
+    public int getOwner() {
+        return owner;
     }
 
     public void setName(String name) throws Exception {

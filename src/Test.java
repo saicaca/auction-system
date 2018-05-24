@@ -78,7 +78,7 @@ public class Test {
                 for (Item item: items) {
                     if (item.isEmpty())
                         continue;
-                    if (item.getOwnerId() == userId)
+                    if (item.getOwner() == userId)
                         System.out.println(item.toString());
                 }
         }
