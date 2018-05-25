@@ -1,14 +1,14 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Item implements Serializable {
-    private static ArrayList<Item> list = new ArrayList<>();
     private boolean Empty;
     private String name;
     private int newness;
     private String description;
     private int value;
-    private int ownerId;
+    private Account owner;
 
     private Item() {
 
@@ -19,8 +19,8 @@ public class Item implements Serializable {
         this.newness = newness;
         this.description = description;
         this.value = value;
-        ownerId = Account.getCurrentUser().getId();
-        list.add(this);
+        owner = Account.getCurrentUser();
+        Data.data.items.add(this);
     }
 
     public boolean isEmpty() {
@@ -34,50 +34,30 @@ public class Item implements Serializable {
     }
 
     public static Item get(int id) {
-        return list.get(id);
+        return Data.data.items.get(id);
     }
 
     public static ArrayList<Item> getList() {
-        return list;
+        return Data.data.items;
     }
 
     public static void clear() {
-        list = new ArrayList<>();
+        Data.data.items = new ArrayList<>();
     }
-
-    public static void save() throws Exception {
-        ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream("items.dat"));
-        for (Item item : list) {
-            output.writeObject(item);
-        }
-    }
-
-    public static void read() throws Exception {
-        ObjectInputStream input = new ObjectInputStream(new FileInputStream("items.dat"));
-        try {
-            while (true) {
-                Item.list.add((Item) input.readObject());
-            }
-        } catch (EOFException ex) {
-
-        }
-    }
-
-
 
     private void checkUser() throws Exception {
         if (Account.getCurrentUser() == null)
             throw new NoLoginException();
-        else if (!(Account.getCurrentUser().getId() == ownerId) && !Account.getCurrentUser().isAdmin()) {
+        else if (!(Account.getCurrentUser() == owner) && !Account.getCurrentUser().isAdmin()) {
             throw new NoPermissionException();
         }
     }
 
     @Override
     public String toString() {
-        return "id: " + list.indexOf(this) +
+        return "id: " + Data.data.items.indexOf(this) +
                 "\nname: " + name +
-                "\nownerId: " + Account.get(ownerId).getUsername() +
+                "\nownerId: " + owner.getUsername() +
                 "\nnewness: " + newness +
                 "\ndescription: " + description +
                 "\nvalue: " + value + "\n";
@@ -93,7 +73,7 @@ public class Item implements Serializable {
     }
 
     public int getOwnerId() {
-        return ownerId;
+        return owner.getId();
     }
 
     public void setName(String name) throws Exception {

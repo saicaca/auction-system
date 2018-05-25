@@ -16,7 +16,7 @@ public class Auction implements Serializable {
         this.itemId = itemId;
         this.limit = limit;
     }
-    
+
     public void bid(int price) {
         bids.add(new Bid(Account.get().getId(), price, new Date()));
     }

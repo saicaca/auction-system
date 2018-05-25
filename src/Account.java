@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 public class Account implements Serializable {
     private static Account currentUser;
-    private static ArrayList<Account> list = new ArrayList<>();
     private String username;
     private String password;
     private boolean admin;
@@ -12,24 +11,28 @@ public class Account implements Serializable {
 
     }
 
-    private Account(String username, String password, boolean admin) {
+     Account(String username, String password, boolean admin) {
         this.username = username;
         this.password = password;
         this.admin = admin;
-        list.add(this);
+        Data.data.accounts.add(this);
     }
 
     public static void register(String username, String password, boolean admin) throws Exception {
-        for (Account account : list) {
-            if (account.username.equals(username))
-                throw new UsernameInUseException();
+        try{
+            for (Account account : Data.data.accounts) {
+                if (account.username.equals(username))
+                    throw new UsernameInUseException();
+            }
+        }catch (NullPointerException ex) {
+
         }
-        list.add(new Account(username, password, admin));
+        Data.data.accounts.add(new Account(username, password, admin));
         login(username, password);
     }
 
     public static void login(String username, String password) throws Exception {
-        for (Account account : list) {
+        for (Account account : Data.data.accounts) {
             if (account.username.equals(username)) {
                 if (account.password.equals(password)) {
                     currentUser = account;
@@ -46,25 +49,7 @@ public class Account implements Serializable {
     }
 
     public static void clear() {
-        list = new ArrayList<Account>();
-    }
-
-    public static void save() throws Exception {
-        ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream("accounts.dat"));
-        for (Account account : Account.list) {
-            output.writeObject(account);
-        }
-    }
-
-    public static void read() throws Exception {
-        ObjectInputStream input = new ObjectInputStream(new FileInputStream("accounts.dat"));
-        try {
-            while (true) {
-                Account.list.add((Account) input.readObject());
-            }
-        } catch (EOFException ex) {
-
-        }
+        Data.data.accounts = new ArrayList<Account>();
     }
 
     public static Account get() {
@@ -72,11 +57,11 @@ public class Account implements Serializable {
     }
 
     public static Account get(int id) {
-        return list.get(id);
+        return Data.data.accounts.get(id);
     }
 
     public static Account get(String username) throws Exception {
-        for (Account account : list) {
+        for (Account account : Data.data.accounts) {
             if (account.getUsername().equals(username))
                 return account;
         }
@@ -88,7 +73,7 @@ public class Account implements Serializable {
     }
 
     public int getId() {
-        return list.indexOf(this);
+        return Data.data.accounts.indexOf(this);
     }
 
     public boolean isAdmin() {

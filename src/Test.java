@@ -4,8 +4,7 @@ import java.util.Scanner;
 public class Test {
     static Scanner in = new Scanner(System.in);
     public static void main(String[] args) throws Exception{
-        Account.read();
-        Item.read();
+        Data.load();
         while (true){
             try{
                 System.out.println(
@@ -47,8 +46,7 @@ public class Test {
                         }
                         break;
                     case 3:
-                        Item.save();
-                        Account.save();
+                        Data.save();
                         System.exit(0);
                 }
             }
