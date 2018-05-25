@@ -22,12 +22,4 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 *.dat
-*.dat
-accounts.dat
-*.dat
-*.dat
-items.dat
-.idea/workspace.xml
-.idea/workspace.xml
-.idea/workspace.xml
-.idea/workspace.xml
+.idea/
