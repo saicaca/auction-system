@@ -19,7 +19,7 @@
 *.tar.gz
 *.rar
 
-# IDE Files #
+# Ide Files #
 *.xml
 
 # Save Files #
