@@ -21,6 +21,7 @@
 
 # Ide Files #
 /.idea
+/out
 
 # Save Files #
 *.dat
