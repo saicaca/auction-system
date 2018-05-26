@@ -20,7 +20,7 @@
 *.rar
 
 # Ide Files #
-*.xml
+/.idea
 
 # Save Files #
 *.dat
