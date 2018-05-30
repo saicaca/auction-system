@@ -9,6 +9,7 @@ public class Item implements Serializable {
     private String description;
     private int value;
     private int ownerId;
+    transient private Account owner;
 
     private Item() {
 
@@ -20,7 +21,12 @@ public class Item implements Serializable {
         this.description = description;
         this.value = value;
         ownerId = Account.getCurrentUser().getId();
+        owner = Account.get(ownerId);
         list.add(this);
+    }
+
+    public void loadOwner() {
+        owner = Account.get(ownerId);
     }
 
     public boolean isEmpty() {
@@ -61,14 +67,15 @@ public class Item implements Serializable {
         } catch (EOFException ex) {
 
         }
+        for (Item item: list) {
+            item.loadOwner();
+        }
     }
-
-
 
     private void checkUser() throws Exception {
         if (Account.getCurrentUser() == null)
             throw new NoLoginException();
-        else if (!(Account.getCurrentUser().getId() == ownerId) && !Account.getCurrentUser().isAdmin()) {
+        else if (!(Account.getCurrentUser() == owner) && !Account.getCurrentUser().isAdmin()) {
             throw new NoPermissionException();
         }
     }
@@ -77,7 +84,7 @@ public class Item implements Serializable {
     public String toString() {
         return "id: " + list.indexOf(this) +
                 "\nname: " + name +
-                "\nownerId: " + Account.get(ownerId).getUsername() +
+                "\nowner: " + owner.getUsername() +
                 "\nnewness: " + newness +
                 "\ndescription: " + description +
                 "\nvalue: " + value + "\n";
