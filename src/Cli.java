@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Test {
+public class Cli {
     static Scanner in = new Scanner(System.in);
     public static void main(String[] args) throws Exception{
         Account.read();
