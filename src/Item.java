@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Item implements Serializable {
     private static ArrayList<Item> list = new ArrayList<>();
@@ -10,10 +11,6 @@ public class Item implements Serializable {
     private int value;
     private int ownerId;
     transient private Account owner;
-
-    private Item() {
-
-    }
 
     private Item(String name, int newness, String description, int value) {
         this.name = name;
@@ -45,6 +42,18 @@ public class Item implements Serializable {
 
     public static ArrayList<Item> getList() {
         return list;
+    }
+
+    public static ArrayList<Item> sortByValue() {
+        ArrayList<Item> sortedList = new ArrayList<>(list);
+        sortedList.sort(new AsValueComparator());
+        return sortedList;
+    }
+
+    public static ArrayList<Item> sortByName() {
+        ArrayList<Item> sortedList = new ArrayList<>(list);
+        sortedList.sort(new AsNameComparator());
+        return sortedList;
     }
 
     public static void clear() {
@@ -133,6 +142,18 @@ public class Item implements Serializable {
     public void setValue(int value) throws Exception {
         checkUser();
         this.value = value;
+    }
+}
+
+class AsNameComparator implements Comparator<Item> {
+    public int compare(Item item1, Item item2) {
+        return item1.getName().compareTo(item2.getName());
+    }
+}
+
+class AsValueComparator implements Comparator<Item> {
+    public int compare(Item item1, Item item2) {
+        return Integer.compare(item1.getValue(), item2.getValue());
     }
 }
 
